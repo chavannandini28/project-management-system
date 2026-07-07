@@ -1,8 +1,56 @@
-// project_ID. ref from project 
-// title 
-// desscription,
-//  startDate,
-//  endDate,
-//  status,
-//  createdBy ref from user 
-// docPath, String 
+const mongoose = require("mongoose");
+
+const taskSchema = new mongoose.Schema(
+    {
+        project_ID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Project",
+            required: true,
+        },
+
+        title: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+
+        description: {
+            type: String,
+            default: "",
+        },
+
+        startDate: {
+            type: Date,
+            required: true,
+        },
+
+        endDate: {
+            type: Date,
+            required: true,
+        },
+
+        status: {
+            type: String,
+            enum: ["Pending", "In-progress", "Completed"],
+            default: "Pending",
+        },
+
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+        },
+
+        docPath: {
+            type: String,
+            default: "",
+        },
+    },
+    {
+        timestamps: true,
+    }
+);
+
+const Task = mongoose.model("task", taskSchema);
+
+module.exports = Task;

@@ -1,23 +1,36 @@
 const express = require('express')
-const  {
-createTask,
-getAllTasks,
-getTaskByID,
-updateStatus,
-updateTask,
-daleteTask
-} = require('../controllers/taskController')
 const {auth, admin} =require('../middleware/auth')
-const {uploadFiles} = require('../uploads/taskFiles')
+const uploadFiles = require('../middleware/docMulter')
+const {
+    createTask,
+    // getAllTasks,
+    // getTaskById,
+    // updateTask,
+    // updateTaskStatus,
+    // deleteTask,
+    // getTasksByProject,
+    // getTotalTasks
+} = require("../controllers/taskController");
 
 const router = express.Router()
 
-router.post('/create',auth, admin, uploadFiles.single('docPath'),createTask)
-router.get('/getAll',auth, getAllTasks)
-router.get('/getTask/:ID',auth, getTaskByID)
-router.patch('/updateStatus/:ID', auth,updateStatus)
-router.put('/updateTask/:ID',auth,admin, updateTask)
-router.delete('/delete/:ID',auth,admin, daleteTask)
+
+
+router.post("/create", auth, uploadFiles.single("docPath"), createTask);
+
+// router.get("/getAllTasks", auth, getAllTasks);
+
+// router.get("/getTaskById/:ID", auth, getTaskById);
+
+// router.patch("/updateTask/:ID", auth, upload.single("doc"), updateTask);
+
+// router.patch("/updateTaskStatus/:ID", auth, updateTaskStatus);
+
+// router.delete("/deleteTask/:ID", auth, deleteTask);
+
+// router.get("/getTasksByProject/:PROJECT_ID", auth, getTasksByProject);
+
+// router.get("/getTotalTasks", auth, getTotalTasks);
 
 
 

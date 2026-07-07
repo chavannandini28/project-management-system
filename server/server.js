@@ -3,7 +3,7 @@ const cors = require('cors')
 const path = require('path')
 const {conneDB} = require('./config/db')
 require('dotenv').config()
-// const taskRouter = require('./routes/taskRoute')
+const taskRouter = require('./routes/taskRoute')
 const userRouter = require('./routes/userRoute')
 const projectRouter = require('./routes/projectRoute')
 
@@ -18,7 +18,7 @@ app.use(cors())
 
 app.get('/', (req, res) => res.send('Hello World!'))
 
-// app.use('/task', taskRouter)
+app.use('/task', taskRouter)
 app.use('/project',projectRouter)
 app.use('/user', userRouter)
 // app.use('/assign', assignTaskRouter)

@@ -7,9 +7,10 @@ const storage = multer.diskStorage({
         cb(null, 'uploads/taskFiles')
     },
     filename:(req, file,cb)=>{
-      console.log("******* filename")
+      console.log("******* filename", file)
 
-        const uniqueName = Date.now()+file.originalname
+        const uniqueName = Date.now()+ "-" + file.originalname
+        console.log(uniqueName)
         cb(null,uniqueName)
     }
 })
@@ -18,11 +19,16 @@ const storage = multer.diskStorage({
 const fileFilter =(req, file, cb)=>{
     const allowedTypes = /pdf|doc|docx/
 
+    const allowedMimeTypes = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
     const extName = allowedTypes.test(
     path.extname(file.originalname).toLowerCase()
   );
 
-  const mimeType = allowedTypes.test(file.mimetype);
+  const mimeType = allowedMimeTypes.includes(file.mimetype);
 
   if (extName && mimeType) {
     cb(null, true);
