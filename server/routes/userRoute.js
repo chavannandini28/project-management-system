@@ -14,8 +14,10 @@ router.post("/login", login);
 router.get("/getUserInfo",auth, getUserInfo);
 // // router.put("/updateProfile", updateProfile);
 
-// router.get("/getAllUsers", getAllUsers)
+router.get("/getAllUsers", getAllUsers)
 // changePassword
 //totalNumberOfUSers
+
+
 
 module.exports = router;

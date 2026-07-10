@@ -46,7 +46,61 @@ async function createTask(req, res) {
         });
     }
 }
+async function getAllTasks(req, res) {
+    try {
+        const tasks = await Task.find()
+            .populate("project_ID", "title department status")
+            .populate("createdBy", "name email role");
 
+        res.status(200).send({
+            success: true,
+            tasks
+        });
 
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({
+            success: false,
+            msg: "Server Error"
+        });
+    }
+}
 
-module.exports = {createTask}
+async function getTaskById(req, res) {
+    try {
+        const ID = req.params.ID;
+
+        const task = await Task.findById(ID)
+            .populate("project_ID", "title department status")
+            .populate("createdBy", "name email role");
+
+        if (!task) {
+            return res.status(404).send({
+                success: false,
+                msg: "Task not found"
+            });
+        }
+
+        // Convert mongoose document to plain object
+        const taskData = task.toObject();
+
+        // Absolute URL for downloading document
+        if (taskData.docPath) {
+            taskData.docPath = `http://localhost:7005/uploads/taskFiles/${taskData.docPath}`;
+        }
+
+        res.status(200).send({
+            success: true,
+            taskData
+        });
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({
+            success: false,
+            msg: "Server Error"
+        });
+    }
+}
+
+module.exports = {createTask, getAllTasks, getTaskById}

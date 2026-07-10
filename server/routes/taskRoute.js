@@ -3,8 +3,8 @@ const {auth, admin} =require('../middleware/auth')
 const uploadFiles = require('../middleware/docMulter')
 const {
     createTask,
-    // getAllTasks,
-    // getTaskById,
+    getAllTasks,
+    getTaskById,
     // updateTask,
     // updateTaskStatus,
     // deleteTask,
@@ -18,9 +18,9 @@ const router = express.Router()
 
 router.post("/create", auth, uploadFiles.single("docPath"), createTask);
 
-// router.get("/getAllTasks", auth, getAllTasks);
+router.get("/getAllTasks", auth, getAllTasks);
 
-// router.get("/getTaskById/:ID", auth, getTaskById);
+router.get("/getTaskById/:ID", auth, getTaskById);
 
 // router.patch("/updateTask/:ID", auth, upload.single("doc"), updateTask);
 

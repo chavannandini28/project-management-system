@@ -94,6 +94,18 @@ const getUserInfo = async(req,res) =>{
     }
 }
 
+
+const getAllUsers = async (req,res) =>{
+    try{
+        const allUsers = await User.find({},{password:0, createdAt:0, updatedAt:0,email:0,__v:0,contactNumber:0})
+        res.status(200).send({allUsers:allUsers,success:true})
+        
+    
+    } catch (error) {
+        res.status(500).send({msg:"Server error", success:false})
+    }
+
+}
 module.exports = {
-    register, login , getUserInfo
+    register, login , getUserInfo, getAllUsers
 }

@@ -7,7 +7,7 @@ const taskRouter = require('./routes/taskRoute')
 const userRouter = require('./routes/userRoute')
 const projectRouter = require('./routes/projectRoute')
 
-// const assignTaskRouter = require('./routes/assignTaskRouter')
+const taskAssignmentRouter = require('./routes/taskAssignmentRoute')
 
 
 const app = express()
@@ -21,7 +21,7 @@ app.get('/', (req, res) => res.send('Hello World!'))
 app.use('/task', taskRouter)
 app.use('/project',projectRouter)
 app.use('/user', userRouter)
-// app.use('/assign', assignTaskRouter)
+app.use('/assign', taskAssignmentRouter)
 
 app.use('/uploads', express.static("uploads"))
 

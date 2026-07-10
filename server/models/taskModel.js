@@ -4,7 +4,7 @@ const taskSchema = new mongoose.Schema(
     {
         project_ID: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Project",
+            ref: "project",
             required: true,
         },
 
@@ -37,7 +37,7 @@ const taskSchema = new mongoose.Schema(
 
         createdBy: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
+            ref: "user",
             required: true,
         },
 
