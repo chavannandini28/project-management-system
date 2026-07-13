@@ -20,8 +20,10 @@ app.get('/', (req, res) => res.send('Hello World!'))
 
 app.use('/task', taskRouter)
 app.use('/project',projectRouter)
-app.use('/user', userRouter)
+// app.use('/user', userRouter)
 app.use('/assign', taskAssignmentRouter)
+
+app.use("/api/user", userRouter);
 
 app.use('/uploads', express.static("uploads"))
 
