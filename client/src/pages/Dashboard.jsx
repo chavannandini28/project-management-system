@@ -1,91 +1,766 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../redux/authSlice";
-import { useNavigate } from "react-router-dom";
+import React,{useEffect,useState} from "react";
 
-const Dashboard = () => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+import {
+FaProjectDiagram,
+FaTasks,
+FaCheckCircle,
+FaClock
+}
+from "react-icons/fa";
 
-    const { user } = useSelector((state) => state.auth);
 
-    const handleLogout = () => {
-        dispatch(logout());
-        navigate("/");
-    };
+import PieChart from "../components/charts/PieChart";
 
-    return (
-        <div className="container mt-5">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>Dashboard</h2>
+import BarChart from "../components/charts/BarChart";
 
-                <button className="btn btn-danger" onClick={handleLogout}>
-                    Logout
-                </button>
-            </div>
 
-            <div className="card p-3 mb-4">
-                <h4>Welcome, {user?.name}</h4>
-                <p>Email: {user?.email}</p>
-                <p>Role: {user?.role}</p>
+import {
+getDashboardStats
+}
+from "../api/dashboardAPI";
 
-                {user?.imgPath && (
-                    <img
-                        src={user.imgPath}
-                        alt="Profile"
-                        width="100"
-                        height="100"
-                        style={{ borderRadius: "50%" }}
-                    />
-                )}
-            </div>
 
-            {user?.role === "admin" && (
-                <div className="card p-3 bg-light">
-                    <h3>Admin Dashboard</h3>
-                    <p>You can manage users, projects, tasks, and approvals.</p>
 
-                    <button className="btn btn-primary me-2">
-                        Manage Users
-                    </button>
 
-                    <button className="btn btn-success me-2">
-                        Manage Projects
-                    </button>
 
-                    <button className="btn btn-warning">
-                        Manage Tasks
-                    </button>
-                </div>
-            )}
+const Dashboard = ()=>{
 
-            {user?.role === "HOD" && (
-                <div className="card p-3 bg-light">
-                    <h3>HOD Dashboard</h3>
-                    <p>You can view assigned projects and manage department tasks.</p>
 
-                    <button className="btn btn-primary me-2">
-                        View Department Projects
-                    </button>
 
-                    <button className="btn btn-success">
-                        View Tasks
-                    </button>
-                </div>
-            )}
+const [stats,setStats]=useState({
 
-            {user?.role === "user" && (
-                <div className="card p-3 bg-light">
-                    <h3>User Dashboard</h3>
-                    <p>You can view your assigned tasks and update task progress.</p>
+projects:0,
+tasks:0,
+completed:0,
+pending:0,
+recentTasks:[],
+recentProjects:[]
 
-                    <button className="btn btn-primary">
-                        My Tasks
-                    </button>
-                </div>
-            )}
-        </div>
-    );
+});
+
+
+
+const [loading,setLoading]=useState(true);
+
+
+
+const [error,setError]=useState("");
+
+
+
+
+
+
+useEffect(()=>{
+
+
+fetchDashboard();
+
+
+},[]);
+
+
+
+
+
+
+
+const fetchDashboard=async()=>{
+
+
+try{
+
+
+setLoading(true);
+
+
+const data = await getDashboardStats();
+
+
+
+setStats(data);
+
+
+
+}
+
+catch(err){
+
+
+setError(
+"Failed to load dashboard"
+);
+
+
+}
+
+finally{
+
+setLoading(false);
+
+}
+
+
 };
+
+
+
+
+
+
+
+
+
+const cards=[
+
+
+{
+
+title:"Total Projects",
+
+value:stats.projects,
+
+icon:<FaProjectDiagram/>,
+
+color:"bg-blue-600"
+
+},
+
+
+{
+
+title:"Total Tasks",
+
+value:stats.tasks,
+
+icon:<FaTasks/>,
+
+color:"bg-purple-600"
+
+},
+
+
+{
+
+title:"Completed",
+
+value:stats.completed,
+
+icon:<FaCheckCircle/>,
+
+color:"bg-green-600"
+
+},
+
+
+{
+
+title:"Pending",
+
+value:stats.pending,
+
+icon:<FaClock/>,
+
+color:"bg-orange-600"
+
+}
+
+
+
+];
+
+
+
+
+
+
+
+const pieData=[
+
+
+{
+name:"Completed",
+value:stats.completed
+},
+
+
+{
+name:"Pending",
+value:stats.pending
+}
+
+
+];
+
+
+
+
+
+const barData=[
+
+
+{
+month:"Jan",
+tasks:20
+},
+
+
+{
+month:"Feb",
+tasks:35
+},
+
+
+{
+month:"Mar",
+tasks:45
+},
+
+
+{
+month:"Apr",
+tasks:30
+}
+
+
+];
+
+
+
+
+
+
+
+
+
+
+if(loading){
+
+
+return(
+
+<div className="
+flex
+justify-center
+items-center
+h-96
+">
+
+<p className="text-xl">
+Loading Dashboard...
+</p>
+
+
+</div>
+
+)
+
+}
+
+
+
+
+
+
+
+return(
+
+<div className="
+space-y-8
+">
+
+
+
+
+
+<h1 className="
+text-3xl
+font-bold
+text-gray-800
+">
+
+Dashboard
+
+</h1>
+
+
+
+
+
+
+
+{
+error &&
+
+<div className="
+bg-red-100
+text-red-700
+p-4
+rounded
+">
+
+{error}
+
+</div>
+
+}
+
+
+
+
+
+
+
+
+{/* Statistics Cards */}
+
+
+
+<div className="
+grid
+grid-cols-1
+sm:grid-cols-2
+lg:grid-cols-4
+gap-6
+">
+
+
+
+
+
+{
+
+cards.map((card,index)=>(
+
+
+<div
+
+key={index}
+
+className="
+bg-white
+rounded-xl
+shadow-md
+p-6
+flex
+items-center
+justify-between
+"
+
+>
+
+
+<div>
+
+
+<h3 className="
+text-gray-500
+">
+
+{card.title}
+
+</h3>
+
+
+<p className="
+text-3xl
+font-bold
+mt-2
+">
+
+{card.value}
+
+</p>
+
+
+</div>
+
+
+
+
+
+<div
+
+className={`
+${card.color}
+text-white
+p-4
+rounded-full
+text-xl
+`}
+
+>
+
+{card.icon}
+
+
+</div>
+
+
+
+</div>
+
+
+))
+
+
+}
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+{/* Charts */}
+
+
+<div className="
+grid
+grid-cols-1
+lg:grid-cols-2
+gap-6
+">
+
+
+
+<PieChart
+
+data={pieData}
+
+/>
+
+
+
+
+<BarChart
+
+data={barData}
+
+/>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* Recent Tasks */}
+
+
+
+<div className="
+bg-white
+rounded-xl
+shadow-md
+p-6
+">
+
+
+<h2 className="
+text-xl
+font-bold
+mb-5
+">
+
+Recent Tasks
+
+</h2>
+
+
+
+
+
+<div className="
+overflow-x-auto
+">
+
+
+<table className="
+w-full
+">
+
+
+<thead>
+
+<tr className="
+bg-gray-100
+">
+
+<th className="p-3 text-left">
+Task
+</th>
+
+
+<th>
+Status
+</th>
+
+
+<th>
+Priority
+</th>
+
+
+<th>
+Date
+</th>
+
+
+</tr>
+
+</thead>
+
+
+
+
+
+<tbody>
+
+
+{
+
+stats.recentTasks.length===0 ?
+
+
+<tr>
+
+<td
+colSpan="4"
+className="
+text-center
+p-5
+text-gray-500
+"
+>
+
+No Tasks Found
+
+</td>
+
+</tr>
+
+
+:
+
+
+stats.recentTasks.map(task=>(
+
+
+<tr
+
+key={task._id}
+
+className="
+border-b
+"
+
+>
+
+
+<td className="p-3">
+
+{task.title}
+
+</td>
+
+
+<td>
+
+<span className="
+px-3
+py-1
+rounded-full
+bg-blue-100
+text-blue-700
+">
+
+{task.status}
+
+</span>
+
+
+</td>
+
+
+
+<td>
+
+{task.priority}
+
+</td>
+
+
+
+<td>
+
+{task.dueDate}
+
+</td>
+
+
+
+</tr>
+
+
+))
+
+
+}
+
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* Recent Projects */}
+
+
+
+<div className="
+bg-white
+rounded-xl
+shadow-md
+p-6
+">
+
+
+<h2 className="
+text-xl
+font-bold
+mb-5
+">
+
+Recent Projects
+
+</h2>
+
+
+
+<div className="
+grid
+md:grid-cols-3
+gap-5
+">
+
+
+
+{
+
+stats.recentProjects.length===0?
+
+
+<p className="
+text-gray-500
+">
+
+No Projects Found
+
+</p>
+
+
+
+:
+
+
+stats.recentProjects.map(project=>(
+
+
+<div
+
+key={project._id}
+
+className="
+border
+rounded-lg
+p-4
+"
+
+>
+
+
+<h3 className="
+font-bold
+text-lg
+">
+
+{project.name}
+
+</h3>
+
+
+
+<p className="
+text-gray-500
+mt-2
+">
+
+{project.description}
+
+</p>
+
+
+
+</div>
+
+
+))
+
+
+}
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+)
+
+
+}
+
+
 
 export default Dashboard;

@@ -1,35 +1,31 @@
-import { useState, useEffect } from 'react'
-import './App.css'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Register from './pages/Register'
-import Login from './pages/Login'
-import Dashboard from './pages/Dashboard'
-import ProtectedRoute from './components/ProtectedRoute'
-import { getUserInfo } from "./redux/authSlice";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
 
-function App() {
-  const dispatch = useDispatch();
-    const { token } = useSelector((state) => state.auth);
+import AppRoutes from "./routes/AppRoutes";
 
-    useEffect(() => {
-        if (token) {
-            dispatch(getUserInfo());
-        }
-    }, [token, dispatch]);
+import {
+    Toaster
+} from "react-hot-toast";
 
-  return (
-    <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<Login />}></Route>
-          <Route path='/register' element={<Register />}></Route>
-          <Route path='/dashboard' element={<ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>}></Route>
 
-        </Routes>
-    </BrowserRouter>
-  )
-}
+const App = () => {
 
-export default App
+
+return (
+
+<>
+
+<AppRoutes/>
+
+<Toaster
+position="top-right"
+/>
+
+</>
+
+);
+
+
+};
+
+
+export default App;
